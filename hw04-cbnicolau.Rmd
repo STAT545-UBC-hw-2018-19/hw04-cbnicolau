@@ -23,17 +23,39 @@ _Solution:_ Reshape your data. For simple reshaping, `gather()` and `spread()` f
 
 Before getting into the assignment activity, let's remember what `gather()` and `spread()` do
 
-- `gather()` is used for making untidy data tidy
+1. `gather()` is used for making untidy data tidy
 
-  *Format:* gather(`data`, `key = "key_name"`, `value = "value"`, `...`) where:
+*Format:* `gather`(`data`, `key = "key_name"`, `value = "value"`, `...`) where:
   
-  *"key_name"* is what we want to call the column headers that became a variable, 
+  - `"key_name"` is what we want to call the column headers that became a variable, 
   
-  *"value"* is what we want to call the stacked columns that became a variable
+  - `"value"` is what we want to call the stacked columns that became a variable
   
-  and the last argument *...* correspond to the items we want to include or not include in the new table
+  - and the last argument `...` correspond to the items we want to include or not include in the new table
 
-```{r}
+Let's first have a look at the iris data frame
 
+```{r iris}
+
+colnames(iris)
+
+```
+
+And then take a subset of this table by slicing the first appearance of each species
+
+```{r mini_iris}
+(mini_iris <-
+  iris %>%
+  group_by(Species) %>%
+  slice(1))
+```
+
+Now we can make this untidy data tidy with gather()
+
+```{r gather() example}
+mini_iris %>% 
+  gather(key = flower_att, #creates a new column named flower_att that contains the measurement type
+         value = measurement, #contains the value of the measurement type for each species
+         -Species) #we include the species name in the new table
 ```
 
