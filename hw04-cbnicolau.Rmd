@@ -2,7 +2,10 @@
 title: "Homework_04"
 author: "Coni"
 date: "October 4, 2018"
-output: github_document
+output:
+  github_document:
+    toc: yes
+  
 ---
 
 # Homework 04: Tidy data and joins
@@ -12,6 +15,8 @@ In this assignment we use `tidyr` and `dplyr`
 ```{r message=FALSE, warning=FALSE}
 library(tidyr)
 library(dplyr)
+library(gapminder)
+library(tidyverse)
 ```
 
 
@@ -23,7 +28,9 @@ _Solution:_ Reshape your data. For simple reshaping, `gather()` and `spread()` f
 
 Before getting into the assignment activity, let's remember what `gather()` and `spread()` do
 
-1. `gather()` is used for making untidy data tidy
+1. `gather()` 
+
+It's used for making untidy data tidy. It takes multiple columns, and gathers them into key-value pairs: it makes “wide” data longer.
 
 *Format:* `gather`(`data`, `key = "key_name"`, `value = "value"`, `...`) where:
   
@@ -37,25 +44,84 @@ Let's first have a look at the iris data frame
 
 ```{r iris}
 
-colnames(iris)
+head(iris)
 
 ```
 
-And then take a subset of this table by slicing the first appearance of each species
+And then take a subset of this df by slicing the first appearance of each species
 
 ```{r mini_iris}
-(mini_iris <-
+mini_iris <- 
   iris %>%
-  group_by(Species) %>%
-  slice(1))
+  group_by(Species) %>% #group by species
+  slice(1) #takes only the first row of each group
+
+knitr::kable(mini_iris) #print table
 ```
 
 Now we can make this untidy data tidy with gather()
 
 ```{r gather() example}
-mini_iris %>% 
+tidy_mini_iris <- mini_iris %>% 
   gather(key = flower_att, #creates a new column named flower_att that contains the measurement type
          value = measurement, #contains the value of the measurement type for each species
-         -Species) #we include the species name in the new table
+         -Species) #include the species name in the new table
+
+knitr::kable(tidy_mini_iris)
+```
+
+2. `spread()` 
+
+Takes two columns (key & value) and spreads in to multiple columns.
+Useful to make “long” data wider.
+
+```{r spread() example}
+untidy_mini_iris <- spread(tidy_mini_iris,flower_att, measurement)
+
+knitr::kable(untidy_mini_iris)
+```
+
+_Prompt:_ Activity #2
+
+Make a tibble with one row per year and columns for life expectancy for two or more countries.
+
+- Use knitr::kable() to make this table look pretty in your rendered homework.
+- Take advantage of this new data shape to scatterplot life expectancy for one country against that of another.
+
+```{r}
+head(gapminder)
+
+(mini_gapminder <- gapminder %>%
+  select(country, year, lifeExp) %>% #keep only variables we want
+  filter(country == "Chile" | country == "Canada" )) # keep only countries we want
+
+mini_gapminder %>% 
+  spread(country, lifeExp) %>% #make tibble where countries are columns and years are rows
+  ggplot(aes(Canada, Chile, label = year)) + #scatterplot lifeExp of Canada vs Chile
+  geom_point() +
+  geom_text(aes(label = year), hjust = 0, vjust = 0) #add labels and adjust position
+
+```
+
+##Join Prompts (join, merge, look up)
+
+_Problem:_ You have two data sources and you need info from both in one new data object.
+
+_Solution:_ Perform a join, which borrows terminology from the database world, specifically SQL.
+
+_Prompt:_ Activity #1
+
+Create a second data frame, complementary to Gapminder. Join this with (part of) Gapminder using a dplyr join function and make some observations about the process and result. Explore the different types of joins. 
+
+Examples of a second data frame you could build:
+- One row per country, a country variable and one or more variables with extra info, such as language spoken, NATO membership, national animal, or capitol city.
+- One row per continent, a continent variable and one or more variables with extra info, such as northern versus southern hemisphere.
+
+Stuck trying to get data to use as a second data frame...
+
+```{r}
+library(readxl)
+
+#asd <- read_excel("https://github.com/Gapminder-Indicators/tfr/raw/master/tfr-by-gapminder.xlsx")
 ```
 
