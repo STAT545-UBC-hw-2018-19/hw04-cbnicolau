@@ -54,7 +54,7 @@ head(iris)
     ## 5          5.0         3.6          1.4         0.2  setosa
     ## 6          5.4         3.9          1.7         0.4  setosa
 
-And then take a subset of this df by slicing the first appearance of each species
+And then take a subset of this data frame by slicing the first appearance of each species
 
 ``` r
 mini_iris <- 
@@ -118,7 +118,7 @@ knitr::kable(untidy_mini_iris)
 Make a tibble with one row per year and columns for life expectancy for two or more countries.
 
 -   Use knitr::kable() to make this table look pretty in your rendered homework.
--   Take advantage of this new data shape to scatterplot life expectancy for one country against that of another.
+-   Take advantage of this new data shape to scatter plot life expectancy for one country against that of another.
 
 ``` r
 head(gapminder)
@@ -163,7 +163,7 @@ mini_gapminder %>%
   geom_text(aes(label = year), hjust = 0, vjust = 0) #add labels and adjust position
 ```
 
-![](hw04-cbnicolau_files/figure-markdown_github/unnamed-chunk-2-1.png)
+![](hw04-cbnicolau_files/figure-markdown_github/scatter%20plot%20lifeExp-1.png)
 
 Join Prompts (join, merge, look up)
 -----------------------------------
@@ -178,14 +178,231 @@ Create a second data frame, complementary to Gapminder. Join this with (part of)
 
 Examples of a second data frame you could build: - One row per country, a country variable and one or more variables with extra info, such as language spoken, NATO membership, national animal, or capitol city. - One row per continent, a continent variable and one or more variables with extra info, such as northern versus southern hemisphere.
 
-Stuck trying to get data to use as a second data frame...
+We'll add a row with the country capitals. for this we first download the new data set and check the countries listed there match the ones in gapminder.
 
 ``` r
-library(readxl)
+#get data frame with country capitals
+country_capitals <- read_csv("https://github.com/icyrockcom/country-capitals/raw/master/data/country-list.csv") 
 ```
 
-    ## Warning: package 'readxl' was built under R version 3.4.4
+    ## Parsed with column specification:
+    ## cols(
+    ##   country = col_character(),
+    ##   capital = col_character(),
+    ##   type = col_character()
+    ## )
 
 ``` r
-#asd <- read_excel("https://github.com/Gapminder-Indicators/tfr/raw/master/tfr-by-gapminder.xlsx")
+colnames(country_capitals) #inspect country_capitals column names
 ```
+
+    ## [1] "country" "capital" "type"
+
+``` r
+nrow(country_capitals) #get number of rows
+```
+
+    ## [1] 248
+
+``` r
+colnames(gapminder) #inspect gapminder column names
+```
+
+    ## [1] "country"   "continent" "year"      "lifeExp"   "pop"       "gdpPercap"
+
+``` r
+nrow(gapminder$country) #number of rows
+```
+
+    ## NULL
+
+``` r
+#see if the country list matches for both data sets
+setdiff(gapminder$country, country_capitals$country) 
+```
+
+    ##  [1] "Congo, Dem. Rep."      "Congo, Rep."          
+    ##  [3] "Cote d'Ivoire"         "Hong Kong, China"     
+    ##  [5] "Korea, Dem. Rep."      "Korea, Rep."          
+    ##  [7] "Reunion"               "Sao Tome and Principe"
+    ##  [9] "Slovak Republic"       "Taiwan"               
+    ## [11] "United Kingdom"        "West Bank and Gaza"   
+    ## [13] "Yemen, Rep."
+
+``` r
+#see countries that appear in gapminder but not in country_capitals
+
+intersect(country_capitals$country, gapminder$country) #see countries that appear in both datasets
+```
+
+    ##   [1] "Afghanistan"              "Albania"                 
+    ##   [3] "Algeria"                  "Angola"                  
+    ##   [5] "Argentina"                "Australia"               
+    ##   [7] "Austria"                  "Bahrain"                 
+    ##   [9] "Bangladesh"               "Belgium"                 
+    ##  [11] "Benin"                    "Bolivia"                 
+    ##  [13] "Bosnia and Herzegovina"   "Botswana"                
+    ##  [15] "Brazil"                   "Bulgaria"                
+    ##  [17] "Burkina Faso"             "Burundi"                 
+    ##  [19] "Cambodia"                 "Cameroon"                
+    ##  [21] "Canada"                   "Central African Republic"
+    ##  [23] "Chad"                     "Chile"                   
+    ##  [25] "China"                    "Colombia"                
+    ##  [27] "Comoros"                  "Costa Rica"              
+    ##  [29] "Croatia"                  "Cuba"                    
+    ##  [31] "Czech Republic"           "Denmark"                 
+    ##  [33] "Djibouti"                 "Dominican Republic"      
+    ##  [35] "Ecuador"                  "Egypt"                   
+    ##  [37] "El Salvador"              "Equatorial Guinea"       
+    ##  [39] "Eritrea"                  "Ethiopia"                
+    ##  [41] "Finland"                  "France"                  
+    ##  [43] "Gabon"                    "Gambia"                  
+    ##  [45] "Germany"                  "Ghana"                   
+    ##  [47] "Greece"                   "Guatemala"               
+    ##  [49] "Guinea"                   "Guinea-Bissau"           
+    ##  [51] "Haiti"                    "Honduras"                
+    ##  [53] "Hungary"                  "Iceland"                 
+    ##  [55] "India"                    "Indonesia"               
+    ##  [57] "Iran"                     "Iraq"                    
+    ##  [59] "Ireland"                  "Israel"                  
+    ##  [61] "Italy"                    "Jamaica"                 
+    ##  [63] "Japan"                    "Jordan"                  
+    ##  [65] "Kenya"                    "Kuwait"                  
+    ##  [67] "Lebanon"                  "Lesotho"                 
+    ##  [69] "Liberia"                  "Libya"                   
+    ##  [71] "Madagascar"               "Malawi"                  
+    ##  [73] "Malaysia"                 "Mali"                    
+    ##  [75] "Mauritania"               "Mauritius"               
+    ##  [77] "Mexico"                   "Mongolia"                
+    ##  [79] "Montenegro"               "Morocco"                 
+    ##  [81] "Mozambique"               "Myanmar"                 
+    ##  [83] "Namibia"                  "Nepal"                   
+    ##  [85] "Netherlands"              "New Zealand"             
+    ##  [87] "Nicaragua"                "Niger"                   
+    ##  [89] "Nigeria"                  "Norway"                  
+    ##  [91] "Oman"                     "Pakistan"                
+    ##  [93] "Panama"                   "Paraguay"                
+    ##  [95] "Peru"                     "Philippines"             
+    ##  [97] "Poland"                   "Portugal"                
+    ##  [99] "Puerto Rico"              "Romania"                 
+    ## [101] "Rwanda"                   "Saudi Arabia"            
+    ## [103] "Senegal"                  "Serbia"                  
+    ## [105] "Sierra Leone"             "Singapore"               
+    ## [107] "Slovenia"                 "Somalia"                 
+    ## [109] "South Africa"             "Spain"                   
+    ## [111] "Sri Lanka"                "Sudan"                   
+    ## [113] "Swaziland"                "Sweden"                  
+    ## [115] "Switzerland"              "Syria"                   
+    ## [117] "Tanzania"                 "Thailand"                
+    ## [119] "Togo"                     "Trinidad and Tobago"     
+    ## [121] "Tunisia"                  "Turkey"                  
+    ## [123] "Uganda"                   "United States"           
+    ## [125] "Uruguay"                  "Venezuela"               
+    ## [127] "Vietnam"                  "Zambia"                  
+    ## [129] "Zimbabwe"
+
+We see that apparently there are some countries in `gapminder` that aren't in our new data set `country_capitals`. However we can still work with the 129 countries that are in both.
+
+Let's join the two data sets together with `full_join()`
+
+``` r
+(full_join(gapminder, country_capitals, by = "country"))
+```
+
+    ## Warning: Column `country` joining factor and character vector, coercing
+    ## into character vector
+
+    ## # A tibble: 1,834 x 8
+    ##    country    continent  year lifeExp     pop gdpPercap capital type      
+    ##    <chr>      <fct>     <int>   <dbl>   <int>     <dbl> <chr>   <chr>     
+    ##  1 Afghanist~ Asia       1952    28.8  8.43e6      779. Kabul   countryCa~
+    ##  2 Afghanist~ Asia       1957    30.3  9.24e6      821. Kabul   countryCa~
+    ##  3 Afghanist~ Asia       1962    32.0  1.03e7      853. Kabul   countryCa~
+    ##  4 Afghanist~ Asia       1967    34.0  1.15e7      836. Kabul   countryCa~
+    ##  5 Afghanist~ Asia       1972    36.1  1.31e7      740. Kabul   countryCa~
+    ##  6 Afghanist~ Asia       1977    38.4  1.49e7      786. Kabul   countryCa~
+    ##  7 Afghanist~ Asia       1982    39.9  1.29e7      978. Kabul   countryCa~
+    ##  8 Afghanist~ Asia       1987    40.8  1.39e7      852. Kabul   countryCa~
+    ##  9 Afghanist~ Asia       1992    41.7  1.63e7      649. Kabul   countryCa~
+    ## 10 Afghanist~ Asia       1997    41.8  2.22e7      635. Kabul   countryCa~
+    ## # ... with 1,824 more rows
+
+By using `full_join()` we end up with a dataset that is gapminder plus 2 columns where we have the capital name and the type (apparently countryCapital for all)
+
+Note that we were forced to transform factors to character vectors (because one of the datasets had the countries as factors)
+
+Lets try `left_join()` now:
+
+``` r
+left_join(gapminder, country_capitals, by = "country")
+```
+
+    ## Warning: Column `country` joining factor and character vector, coercing
+    ## into character vector
+
+    ## # A tibble: 1,716 x 8
+    ##    country    continent  year lifeExp     pop gdpPercap capital type      
+    ##    <chr>      <fct>     <int>   <dbl>   <int>     <dbl> <chr>   <chr>     
+    ##  1 Afghanist~ Asia       1952    28.8  8.43e6      779. Kabul   countryCa~
+    ##  2 Afghanist~ Asia       1957    30.3  9.24e6      821. Kabul   countryCa~
+    ##  3 Afghanist~ Asia       1962    32.0  1.03e7      853. Kabul   countryCa~
+    ##  4 Afghanist~ Asia       1967    34.0  1.15e7      836. Kabul   countryCa~
+    ##  5 Afghanist~ Asia       1972    36.1  1.31e7      740. Kabul   countryCa~
+    ##  6 Afghanist~ Asia       1977    38.4  1.49e7      786. Kabul   countryCa~
+    ##  7 Afghanist~ Asia       1982    39.9  1.29e7      978. Kabul   countryCa~
+    ##  8 Afghanist~ Asia       1987    40.8  1.39e7      852. Kabul   countryCa~
+    ##  9 Afghanist~ Asia       1992    41.7  1.63e7      649. Kabul   countryCa~
+    ## 10 Afghanist~ Asia       1997    41.8  2.22e7      635. Kabul   countryCa~
+    ## # ... with 1,706 more rows
+
+And `right_join()`:
+
+``` r
+right_join(gapminder, country_capitals, by = "country")
+```
+
+    ## Warning: Column `country` joining factor and character vector, coercing
+    ## into character vector
+
+    ## # A tibble: 1,678 x 8
+    ##    country    continent  year lifeExp     pop gdpPercap capital type      
+    ##    <chr>      <fct>     <int>   <dbl>   <int>     <dbl> <chr>   <chr>     
+    ##  1 Abkhazia   <NA>         NA    NA   NA            NA  Sukhumi countryCa~
+    ##  2 Afghanist~ Asia       1952    28.8  8.43e6      779. Kabul   countryCa~
+    ##  3 Afghanist~ Asia       1957    30.3  9.24e6      821. Kabul   countryCa~
+    ##  4 Afghanist~ Asia       1962    32.0  1.03e7      853. Kabul   countryCa~
+    ##  5 Afghanist~ Asia       1967    34.0  1.15e7      836. Kabul   countryCa~
+    ##  6 Afghanist~ Asia       1972    36.1  1.31e7      740. Kabul   countryCa~
+    ##  7 Afghanist~ Asia       1977    38.4  1.49e7      786. Kabul   countryCa~
+    ##  8 Afghanist~ Asia       1982    39.9  1.29e7      978. Kabul   countryCa~
+    ##  9 Afghanist~ Asia       1987    40.8  1.39e7      852. Kabul   countryCa~
+    ## 10 Afghanist~ Asia       1992    41.7  1.63e7      649. Kabul   countryCa~
+    ## # ... with 1,668 more rows
+
+This keeps the list of countries in the country\_capitals data set as the new country row. Note that the number of countries is different, so one needs to be careful with this.
+
+Let's see what happens with `inner_join()`
+
+``` r
+inner_join(gapminder, country_capitals, by = "country")
+```
+
+    ## Warning: Column `country` joining factor and character vector, coercing
+    ## into character vector
+
+    ## # A tibble: 1,560 x 8
+    ##    country    continent  year lifeExp     pop gdpPercap capital type      
+    ##    <chr>      <fct>     <int>   <dbl>   <int>     <dbl> <chr>   <chr>     
+    ##  1 Afghanist~ Asia       1952    28.8  8.43e6      779. Kabul   countryCa~
+    ##  2 Afghanist~ Asia       1957    30.3  9.24e6      821. Kabul   countryCa~
+    ##  3 Afghanist~ Asia       1962    32.0  1.03e7      853. Kabul   countryCa~
+    ##  4 Afghanist~ Asia       1967    34.0  1.15e7      836. Kabul   countryCa~
+    ##  5 Afghanist~ Asia       1972    36.1  1.31e7      740. Kabul   countryCa~
+    ##  6 Afghanist~ Asia       1977    38.4  1.49e7      786. Kabul   countryCa~
+    ##  7 Afghanist~ Asia       1982    39.9  1.29e7      978. Kabul   countryCa~
+    ##  8 Afghanist~ Asia       1987    40.8  1.39e7      852. Kabul   countryCa~
+    ##  9 Afghanist~ Asia       1992    41.7  1.63e7      649. Kabul   countryCa~
+    ## 10 Afghanist~ Asia       1997    41.8  2.22e7      635. Kabul   countryCa~
+    ## # ... with 1,550 more rows
+
+This is probably the best way to do it, becasue we are keeping only the countries that we have in both datasets (we noticed before that some countries had their names spelled different in the two data sets; this way we dont have that artificial repetition at least)

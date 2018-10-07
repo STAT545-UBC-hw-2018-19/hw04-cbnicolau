@@ -12,7 +12,7 @@ output:
 
 In this assignment we use `tidyr` and `dplyr`
 
-```{r message=FALSE, warning=FALSE}
+```{r load libraries, message=FALSE, warning=FALSE}
 library(tidyr)
 library(dplyr)
 library(gapminder)
@@ -48,7 +48,7 @@ head(iris)
 
 ```
 
-And then take a subset of this df by slicing the first appearance of each species
+And then take a subset of this data frame by slicing the first appearance of each species
 
 ```{r mini_iris}
 mini_iris <- 
@@ -86,9 +86,9 @@ _Prompt:_ Activity #2
 Make a tibble with one row per year and columns for life expectancy for two or more countries.
 
 - Use knitr::kable() to make this table look pretty in your rendered homework.
-- Take advantage of this new data shape to scatterplot life expectancy for one country against that of another.
+- Take advantage of this new data shape to scatter plot life expectancy for one country against that of another.
 
-```{r}
+```{r scatter plot lifeExp}
 head(gapminder)
 
 (mini_gapminder <- gapminder %>%
@@ -117,11 +117,57 @@ Examples of a second data frame you could build:
 - One row per country, a country variable and one or more variables with extra info, such as language spoken, NATO membership, national animal, or capitol city.
 - One row per continent, a continent variable and one or more variables with extra info, such as northern versus southern hemisphere.
 
-Stuck trying to get data to use as a second data frame...
+We'll add a row with the country capitals. for this we first download the new data set and check the countries listed there match the ones in gapminder.
 
-```{r}
-library(readxl)
+```{r country_capitals data set}
+#get data frame with country capitals
+country_capitals <- read_csv("https://github.com/icyrockcom/country-capitals/raw/master/data/country-list.csv") 
 
-#asd <- read_excel("https://github.com/Gapminder-Indicators/tfr/raw/master/tfr-by-gapminder.xlsx")
+colnames(country_capitals) #inspect country_capitals column names
+nrow(country_capitals) #get number of rows
+
+colnames(gapminder) #inspect gapminder column names
+nrow(gapminder$country) #number of rows
+
+#see if the country list matches for both data sets
+setdiff(gapminder$country, country_capitals$country) 
+#see countries that appear in gapminder but not in country_capitals
+
+intersect(country_capitals$country, gapminder$country) #see countries that appear in both datasets
+
 ```
+
+We see that apparently there are some countries in `gapminder` that aren't in our new data set `country_capitals`. However we can still work with the 129 countries that are in both.
+
+Let's join the two data sets together with `full_join()`
+
+```{r full_join country_capitals and gapmider}
+(full_join(gapminder, country_capitals, by = "country"))
+```
+By using `full_join()` we end up with a dataset that is gapminder plus 2 columns where we have the capital name and the type (apparently countryCapital for all)
+
+Note that we were forced to transform factors to character vectors (because one of the datasets had the countries as factors)
+
+Lets try `left_join()` now:
+
+```{r left_join}
+left_join(gapminder, country_capitals, by = "country")
+```
+
+And `right_join()`:
+
+```{r right_join}
+right_join(gapminder, country_capitals, by = "country")
+```
+
+This keeps the list of countries in the country_capitals data set as the new country row. Note that the number of countries is different, so one needs to be careful with this.
+
+Let's see what happens with `inner_join()`
+
+```{r inner_join}
+inner_join(gapminder, country_capitals, by = "country")
+```
+
+This is probably the best way to do it, becasue we are keeping only the countries that we have in both datasets (we noticed before that some countries had their names spelled different in the two data sets; this way we dont have that artificial repetition at least)
+
 
