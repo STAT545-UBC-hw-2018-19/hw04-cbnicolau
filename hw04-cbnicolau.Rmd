@@ -128,6 +128,7 @@ nrow(country_capitals) #get number of rows
 
 colnames(gapminder) #inspect gapminder column names
 nrow(gapminder$country) #number of rows
+#unsure whay this doesn't work
 
 #see if the country list matches for both data sets
 setdiff(gapminder$country, country_capitals$country) 

@@ -217,6 +217,8 @@ nrow(gapminder$country) #number of rows
     ## NULL
 
 ``` r
+#unsure whay this doesn't work
+
 #see if the country list matches for both data sets
 setdiff(gapminder$country, country_capitals$country) 
 ```
