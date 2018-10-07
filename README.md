@@ -15,6 +15,6 @@ This repo contains:
 - [x] Add links to files in README file
 - [x] Data Reshaping Prompts (and relationship to aggregation) 
 - [x] Join Prompts (join, merge, look up)
-- [ ] Reflection and Submit hw link to canvas
+- [x] Reflection and Submit hw link to canvas
 - [ ] Peer review hw03
 - [ ] Submit link of peer review to canvas
