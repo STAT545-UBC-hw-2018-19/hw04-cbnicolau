@@ -99,23 +99,24 @@ mini_gapminder %>%
   spread(country, lifeExp) %>% #make tibble where countries are columns and years are rows
   ggplot(aes(Canada, Chile, label = year)) + #scatterplot lifeExp of Canada vs Chile
   geom_point() +
-  geom_text(aes(label = year), hjust = 0, vjust = 0) #add labels and adjust position
+  geom_text(aes(label = year), color = 336699, hjust = 0.5, vjust = 1.25) + #add labels to points and adjust position
+
+  #change title, axis labels
+  ggtitle("Life expectancy scatter plot") + 
+  xlab("Life Expectancy in Canada")+ 
+  ylab("Life Expectancy in Chile")
 
 ```
 
 ##Join Prompts (join, merge, look up)
 
-_Problem:_ You have two data sources and you need info from both in one new data object.
+*Problem:* You have two data sources and you need info from both in one new data object.
 
-_Solution:_ Perform a join, which borrows terminology from the database world, specifically SQL.
+*Solution:* Perform a join, which borrows terminology from the database world, specifically SQL.
 
-_Prompt:_ Activity #1
+*Prompt:* Activity #1
 
-Create a second data frame, complementary to Gapminder. Join this with (part of) Gapminder using a dplyr join function and make some observations about the process and result. Explore the different types of joins. 
-
-Examples of a second data frame you could build:
-- One row per country, a country variable and one or more variables with extra info, such as language spoken, NATO membership, national animal, or capitol city.
-- One row per continent, a continent variable and one or more variables with extra info, such as northern versus southern hemisphere.
+_Create a second data frame, complementary to Gapminder. Join this with (part of) Gapminder using a dplyr join function and make some observations about the process and result. Explore the different types of joins._
 
 We'll add a row with the country capitals. for this we first download the new data set and check the countries listed there match the ones in gapminder.
 
@@ -135,6 +136,7 @@ setdiff(gapminder$country, country_capitals$country)
 #see countries that appear in gapminder but not in country_capitals
 
 intersect(country_capitals$country, gapminder$country) #see countries that appear in both datasets
+#for some reason this returns NULL :S
 
 ```
 

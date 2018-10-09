@@ -160,7 +160,12 @@ mini_gapminder %>%
   spread(country, lifeExp) %>% #make tibble where countries are columns and years are rows
   ggplot(aes(Canada, Chile, label = year)) + #scatterplot lifeExp of Canada vs Chile
   geom_point() +
-  geom_text(aes(label = year), hjust = 0, vjust = 0) #add labels and adjust position
+  geom_text(aes(label = year), color = 336699, hjust = 0.5, vjust = 1.25) + #add labels to points and adjust position
+
+  #change title, axis labels
+  ggtitle("Life expectancy scatter plot") + 
+  xlab("Life Expectancy in Canada")+ 
+  ylab("Life Expectancy in Chile")
 ```
 
 ![](hw04-cbnicolau_files/figure-markdown_github/scatter%20plot%20lifeExp-1.png)
@@ -174,9 +179,7 @@ Join Prompts (join, merge, look up)
 
 *Prompt:* Activity \#1
 
-Create a second data frame, complementary to Gapminder. Join this with (part of) Gapminder using a dplyr join function and make some observations about the process and result. Explore the different types of joins.
-
-Examples of a second data frame you could build: - One row per country, a country variable and one or more variables with extra info, such as language spoken, NATO membership, national animal, or capitol city. - One row per continent, a continent variable and one or more variables with extra info, such as northern versus southern hemisphere.
+*Create a second data frame, complementary to Gapminder. Join this with (part of) Gapminder using a dplyr join function and make some observations about the process and result. Explore the different types of joins.*
 
 We'll add a row with the country capitals. for this we first download the new data set and check the countries listed there match the ones in gapminder.
 
@@ -302,6 +305,10 @@ intersect(country_capitals$country, gapminder$country) #see countries that appea
     ## [125] "Uruguay"                  "Venezuela"               
     ## [127] "Vietnam"                  "Zambia"                  
     ## [129] "Zimbabwe"
+
+``` r
+#for some reason this returns NULL :S
+```
 
 We see that apparently there are some countries in `gapminder` that aren't in our new data set `country_capitals`. However we can still work with the 129 countries that are in both.
 
