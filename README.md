@@ -16,5 +16,5 @@ This repo contains:
 - [x] Data Reshaping Prompts (and relationship to aggregation) 
 - [x] Join Prompts (join, merge, look up)
 - [x] Reflection and Submit hw link to canvas
-- [ ] Peer review hw03
-- [ ] Submit link of peer review to canvas
+- [x] Peer review hw03
+- [x] Submit link of peer review to canvas
